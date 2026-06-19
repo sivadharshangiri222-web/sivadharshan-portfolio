@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import { useState, useRef, type FormEvent } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
@@ -24,19 +25,47 @@ export default function Contact() {
     e.preventDefault();
     if (!formRef.current) return;
     setStatus('sending');
+
+    const formData = new FormData(formRef.current);
+    const payload = {
+      name: formData.get('from_name'),
+      email: formData.get('from_email'),
+      subject: formData.get('subject'),
+      message: formData.get('message')
+    };
+
     try {
-      await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, formRef.current, EMAILJS_PUBLIC_KEY);
-      setStatus('success');
-      formRef.current.reset();
-      setTimeout(() => setStatus('idle'), 5000);
-    } catch {
-      setStatus('error');
-      setTimeout(() => setStatus('idle'), 5000);
+      const res = await fetch(`${API_BASE_URL}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        setStatus('success');
+        formRef.current.reset();
+        setTimeout(() => setStatus('idle'), 5000);
+        return;
+      }
+      throw new Error('Backend submit failed, falling back');
+    } catch (err) {
+      console.warn('Backend API contact submission failed. Falling back to EmailJS...', err);
+      try {
+        await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, formRef.current, EMAILJS_PUBLIC_KEY);
+        setStatus('success');
+        formRef.current.reset();
+        setTimeout(() => setStatus('idle'), 5000);
+      } catch {
+        setStatus('error');
+        setTimeout(() => setStatus('idle'), 5000);
+      }
     }
   };
 
   return (
-    <section id="contact" className="py-24 bg-white dark:bg-dark-bg">
+    <section id="contact" className="py-24 bg-black dark:bg-black">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           transition={{ duration: 0.6 }} className="text-center mb-16">

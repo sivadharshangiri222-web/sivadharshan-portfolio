@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../config';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiGithub, FiLinkedin, FiMail, FiArrowRight } from 'react-icons/fi';
 import profilePhoto from '../assets/profile_photo.jpg';
@@ -21,8 +23,34 @@ const SOCIALS = [
 ];
 
 export default function Hero() {
+  const [profile, setProfile] = useState({
+    name: 'K. Sivadharshan',
+    designation: 'B.Tech IT Student',
+    cgpa: '8.7',
+    bio: 'Passionate about building modern web applications, AI solutions and innovative projects.'
+  });
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/profile`)
+      .then(res => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then(data => {
+        if (data && data.name) {
+          setProfile({
+            name: data.name,
+            designation: data.designation,
+            cgpa: data.cgpa || '8.7',
+            bio: data.bio
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
-    <section id="home" className="min-h-screen pt-16 flex items-center bg-white dark:bg-dark-bg relative overflow-hidden">
+    <section id="home" className="min-h-screen pt-16 flex items-center bg-black dark:bg-black relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl" />
@@ -39,22 +67,20 @@ export default function Hero() {
             </motion.p>
 
             <motion.h1 {...fadeUp} transition={{ duration: 0.6, delay: 0.2 }}
-              className="font-playfair font-bold text-5xl lg:text-6xl xl:text-7xl leading-none text-gray-900 dark:text-white">
-              K. Siva<br />dharshan
+              className="font-playfair font-bold text-5xl lg:text-6xl xl:text-7xl leading-none text-gray-900 dark:text-white break-words">
+              {profile.name}
             </motion.h1>
 
             <motion.div {...fadeUp} transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-wrap items-center gap-2 font-poppins text-sm font-medium">
-              {['B.Tech IT Student'].map((role) => (
-                <span key={role} className="flex items-center gap-2">
-                  <span className="text-gray-700 dark:text-gray-300">{role}</span>
-                </span>
-              ))}
+              <span className="flex items-center gap-2">
+                <span className="text-gray-700 dark:text-gray-300">{profile.designation}</span>
+              </span>
             </motion.div>
 
             <motion.p {...fadeUp} transition={{ duration: 0.5, delay: 0.4 }}
               className="font-poppins text-base text-gray-600 dark:text-gray-400 leading-relaxed max-w-sm">
-              Passionate about building modern web applications, AI solutions and innovative projects.
+              {profile.bio}
             </motion.p>
 
             <motion.div {...fadeUp} transition={{ duration: 0.5, delay: 0.5 }} className="flex flex-wrap gap-3">
@@ -82,8 +108,8 @@ export default function Hero() {
               <div className="w-72 h-72 lg:w-80 lg:h-80 rounded-3xl overflow-hidden border-2 border-gray-100 dark:border-dark-border shadow-2xl relative bg-gray-800 flex items-center justify-center">
                 <img src={profilePhoto} alt="K. Sivadharshan" className="w-full h-full object-cover" />
                 <div className="absolute bottom-0 left-0 right-0 bg-black/60 backdrop-blur-sm p-4 text-center border-t border-white/10">
-                  <p className="font-poppins text-white text-sm font-semibold tracking-wide">K. Sivadharshan</p>
-                  <p className="font-poppins text-gray-300 text-xs mt-0.5">B.Tech IT Student</p>
+                  <p className="font-poppins text-white text-sm font-semibold tracking-wide">{profile.name}</p>
+                  <p className="font-poppins text-gray-300 text-xs mt-0.5">{profile.designation}</p>
                 </div>
               </div>
               <div className="absolute -inset-3 rounded-3xl border border-gold/20 pointer-events-none" />
@@ -106,7 +132,7 @@ export default function Hero() {
                 initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
                 className="rounded-2xl p-5 bg-gray-50 dark:bg-dark-card border border-gray-100 dark:border-dark-border hover:border-gold/50 transition-colors duration-300">
-                <p className="font-playfair font-bold text-3xl text-gold">{stat.value}</p>
+                <p className="font-playfair font-bold text-3xl text-gold">{stat.label.includes('CGPA') ? profile.cgpa || stat.value : stat.value}</p>
                 <p className="font-poppins text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">{stat.label}</p>
               </motion.div>
             ))}

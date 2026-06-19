@@ -68,7 +68,6 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-3">
-
             <button onClick={() => setMenuOpen(v => !v)} aria-label="Toggle menu"
               className="md:hidden p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-card transition-colors">
               <AnimatePresence mode="wait" initial={false}>

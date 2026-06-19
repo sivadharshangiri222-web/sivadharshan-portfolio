@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../config';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiCheck } from 'react-icons/fi';
 import profilePhoto from '../assets/profile_photo.jpg';
@@ -18,14 +20,40 @@ const LEARNING = [
   'Problem solving & algorithm design',
 ];
 
-const TIMELINE = [
-  { year: '2023–2024', title: 'Higher Secondary Education',      place: 'Christ the King School',         detail: 'Completed HSE with 86.5% — built strong analytical foundations.' },
-  { year: '2024–2028', title: 'B.Tech Information Technology',   place: 'Sathyabama University, Chennai',  detail: 'Currently maintaining CGPA of 8.7, developing real-world software skills.' },
-  { year: '2026',      title: 'Air Nexus — First Major Project', place: 'Deadlock Detection System',       detail: 'Built a Resource Allocation Graph system to solve airline booking deadlocks.' },
-  { year: '2026',      title: 'Smart Sense — IoT Project',       place: 'NodeMCU & Blynk Automation',      detail: 'Automated classroom management using PIR, LDR, and DHT11 sensors.' },
-];
-
 export default function About() {
+  const [profile, setProfile] = useState({
+    name: 'K. Sivadharshan',
+    designation: 'B.Tech IT Student',
+    cgpa: '8.7',
+    bio: "I'm an enthusiastic and detail-oriented B.Tech Information Technology student at Sathyabama Institute of Science and Technology, Chennai, with a strong interest in software development, AI, and problem-solving."
+  });
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/profile`)
+      .then(res => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then(data => {
+        if (data && data.name) {
+          setProfile({
+            name: data.name,
+            designation: data.designation,
+            cgpa: data.cgpa,
+            bio: data.bio
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const TIMELINE = [
+    { year: '2023–2024', title: 'Higher Secondary Education',      place: 'Christ the King School',         detail: 'Completed HSE with 86.5% — built strong analytical foundations.' },
+    { year: '2024–2028', title: `B.Tech ${profile.designation.includes('IT') ? 'Information Technology' : profile.designation}`,   place: 'Sathyabama University, Chennai',  detail: `Currently maintaining CGPA of ${profile.cgpa}, developing real-world software skills.` },
+    { year: '2026',      title: 'Air Nexus — First Major Project', place: 'Deadlock Detection System',       detail: 'Built a Resource Allocation Graph system to solve airline booking deadlocks.' },
+    { year: '2026',      title: 'Smart Sense — IoT Project',       place: 'NodeMCU & Blynk Automation',      detail: 'Automated classroom management using PIR, LDR, and DHT11 sensors.' },
+  ];
+
   return (
     <section id="about" className="py-24 bg-black dark:bg-black">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -50,13 +78,13 @@ export default function About() {
               {/* Text Information (No overlap) */}
               <div className="w-full flex flex-col justify-center items-center text-center mt-2">
                 <h3 className="font-playfair font-bold text-xl text-white leading-tight mb-0.5">
-                  K. Sivadharshan
+                  {profile.name}
                 </h3>
                 <p className="font-poppins text-xs text-gray-300 leading-normal">
-                  B.Tech Information Technology
+                  {profile.designation}
                 </p>
                 <p className="font-poppins text-[10px] text-gray-400 mt-1">
-                  Sathyabama University · CGPA 8.7
+                  Sathyabama University · CGPA {profile.cgpa}
                 </p>
               </div>
             </div>
@@ -66,11 +94,16 @@ export default function About() {
           <div className="space-y-8">
             <motion.div {...fadeUp(0.2)}>
               <p className="font-poppins text-base text-gray-600 dark:text-gray-400 leading-loose">
-                I'm an enthusiastic and detail-oriented B.Tech Information Technology student at Sathyabama Institute of Science and Technology, Chennai, with a strong interest in software development, AI, and problem-solving.
+                {profile.bio.startsWith('Passionate') 
+                  ? `I'm an enthusiastic and detail-oriented ${profile.designation} at Sathyabama Institute of Science and Technology, Chennai, with a strong interest in software development, AI, and problem-solving.` 
+                  : profile.bio
+                }
               </p>
-              <p className="font-poppins text-base text-gray-600 dark:text-gray-400 leading-loose mt-4">
-                Skilled in Python, UI/UX and web technologies with hands-on experience in developing real-world academic projects. Passionate about learning emerging technologies and building impactful software solutions.
-              </p>
+              {profile.bio.startsWith('Passionate') && (
+                <p className="font-poppins text-base text-gray-600 dark:text-gray-400 leading-loose mt-4">
+                  Skilled in Python, UI/UX and web technologies with hands-on experience in developing real-world academic projects. Passionate about learning emerging technologies and building impactful software solutions.
+                </p>
+              )}
             </motion.div>
 
             <motion.div {...fadeUp(0.3)}>
