@@ -1,14 +1,26 @@
 import { API_BASE_URL } from '../config';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiArrowUpRight, FiGithub } from 'react-icons/fi';
+import { FiArrowUpRight, FiGithub, FiMessageSquare } from 'react-icons/fi';
 import { MdOutlineAirplaneTicket, MdSensors, MdOutlineSettings } from 'react-icons/md';
 
 const STATIC_PROJECTS = [
   {
+    title: 'DarzFusion AI — Premium Multimodal AI Assistant',
+    subtitle: 'Premium Multimodal AI Assistant',
+    description: 'DarzFusion AI is a state-of-the-art, premium multimodal AI assistant (similar to ChatGPT) that integrates text messaging, real-time image analysis, and voice note interactions into a single, high-performance web application. It features a luxury dark-mode interface, persistent database-backed history, and Google Search Grounding to answer real-time, current-event questions.',
+    tags: ['Python', 'FastAPI', 'Gemini AI', 'TailwindCSS', 'SQLite', 'Docker'],
+    gradient: 'from-red-950 via-neutral-900 to-black',
+    accent: '#FF1E2D',
+    Icon: FiMessageSquare,
+    href: 'https://darzfusion-ai.onrender.com',
+    github: 'https://github.com/sivadharshangiri222-web/Darzfusion-AI',
+    features: ['Text, real-time image analysis, & voice note interactions','Persistent database history (SQLAlchemy ORM)','Google Search Grounding for real-time answers'],
+  },
+  {
     title: 'Air Nexus',
     subtitle: 'Airline Booking Deadlock Detection',
-    description: 'A system that detects and resolves deadlocks in airline booking using Resource Allocation Graph (RAG) algorithms. Ensures safe resource allocation and prevents booking conflicts through cycle detection in the dependency graph.',
+    description: 'Developed AIR NEXUS to solve deadlock issues in airline booking systems using Resource Allocation Graph (RAG) algorithms. Enhanced booking reliability by detecting and preventing circular wait conditions.',
     tags: ['Python','Graph Algorithms','MySQL','Data Structures'],
     gradient: 'from-blue-900 via-blue-800 to-purple-900',
     accent: '#818CF8',
@@ -19,7 +31,7 @@ const STATIC_PROJECTS = [
   {
     title: 'Smart Classroom',
     subtitle: 'Automation System (Smart Sense)',
-    description: 'An IoT classroom automation system using NodeMCU and Blynk that intelligently manages lighting and resources. Automated lighting and fan control using PIR, LDR, and DHT11 sensors for real-time smart classroom management.',
+    description: 'Developed SMART SENSE to reduce energy wastage in classrooms using IoT-based automation with NodeMCU and Blynk. Automated lighting and fan control using PIR, LDR, and DHT11 sensors for real-time smart classroom management.',
     tags: ['Python','IoT','NodeMCU','Blynk','MySQL'],
     gradient: 'from-emerald-900 via-teal-800 to-cyan-900',
     accent: '#34D399',
@@ -134,7 +146,23 @@ export default function Projects() {
               ...details
             };
           });
-          setProjects(mapped);
+          
+          // Always prepend DarzFusion AI if not returned by the API
+          const hasDarzFusion = mapped.some(p => p.title.toLowerCase().includes('darzfusion'));
+          if (!hasDarzFusion) {
+            const dfDetails = getProjectDetails('DarzFusion AI — Premium Multimodal AI Assistant', '');
+            const dfProject = {
+              title: 'DarzFusion AI — Premium Multimodal AI Assistant',
+              description: 'DarzFusion AI is a state-of-the-art, premium multimodal AI assistant (similar to ChatGPT) that integrates text messaging, real-time image analysis, and voice note interactions into a single, high-performance web application. It features a luxury dark-mode interface, persistent database-backed history, and Google Search Grounding to answer real-time, current-event questions.',
+              github: 'https://github.com/sivadharshangiri222-web/Darzfusion-AI',
+              href: 'https://darzfusion-ai.onrender.com',
+              ...dfDetails,
+              features: ['Text, real-time image analysis, & voice note interactions','Persistent database history (SQLAlchemy ORM)','Google Search Grounding for real-time answers']
+            };
+            setProjects([dfProject, ...mapped]);
+          } else {
+            setProjects(mapped);
+          }
         } else {
           setProjects(STATIC_PROJECTS);
         }

@@ -124,6 +124,14 @@ async function init() {
           github_link: 'https://github.com/sivadharshan',
           live_link: '',
           image_url: ''
+        },
+        {
+          title: 'DarzFusion AI — Premium Multimodal AI Assistant',
+          description: 'DarzFusion AI is a state-of-the-art, premium multimodal AI assistant (similar to ChatGPT) that integrates text messaging, real-time image analysis, and voice note interactions into a single, high-performance web application. It features a luxury dark-mode interface, persistent database-backed history, and Google Search Grounding to answer real-time, current-event questions.',
+          technologies: 'Python, FastAPI, SQLite, SQLAlchemy, Gemini 2.5 Flash, TailwindCSS, Docker',
+          github_link: 'https://github.com/sivadharshangiri222-web/Darzfusion-AI',
+          live_link: 'https://darzfusion-ai.onrender.com',
+          image_url: ''
         }
       ];
 

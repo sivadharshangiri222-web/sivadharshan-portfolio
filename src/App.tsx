@@ -9,6 +9,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
+import DarzFusion from './components/DarzFusion';
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -23,6 +24,8 @@ function App() {
     const handleHashChange = () => {
       if (window.location.hash === '#/admin') {
         setCurrentPath('/admin');
+      } else if (window.location.hash === '#/darzfusion') {
+        setCurrentPath('/darzfusion');
       } else if (window.location.hash === '') {
         setCurrentPath(window.location.pathname);
       }
@@ -32,6 +35,8 @@ function App() {
     // Initial check for hash
     if (window.location.hash === '#/admin') {
       setCurrentPath('/admin');
+    } else if (window.location.hash === '#/darzfusion') {
+      setCurrentPath('/darzfusion');
     }
 
     return () => {
@@ -43,6 +48,8 @@ function App() {
   const navigate = (path: string) => {
     if (path === '/admin') {
       window.location.hash = '#/admin';
+    } else if (path === '/darzfusion') {
+      window.location.hash = '#/darzfusion';
     } else {
       window.location.hash = '';
       window.history.pushState({}, '', path);
@@ -59,6 +66,14 @@ function App() {
     localStorage.removeItem('adminToken');
     setToken(null);
   };
+
+  if (currentPath === '/darzfusion') {
+    return (
+      <ThemeProvider>
+        <DarzFusion onBackToPortfolio={() => navigate('/')} />
+      </ThemeProvider>
+    );
+  }
 
   if (currentPath === '/admin') {
     return (
