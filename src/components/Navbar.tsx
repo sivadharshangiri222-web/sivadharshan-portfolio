@@ -68,13 +68,6 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button 
-              onClick={() => window.location.hash = '#/darzfusion'}
-              className="hidden sm:inline-flex items-center gap-1 bg-[#FF1E2D]/10 text-[#FF1E2D] border border-[#FF1E2D]/30 hover:bg-[#FF1E2D] hover:text-white transition-all duration-300 px-3.5 py-1.5 rounded-full font-poppins text-xs font-semibold shadow-sm hover:shadow-[#FF1E2D]/20 hover:shadow-md"
-            >
-              <span className="material-symbols-outlined text-xs font-bold leading-none">bolt</span>
-              DarzFusion AI
-            </button>
             <button onClick={() => setMenuOpen(v => !v)} aria-label="Toggle menu"
               className="md:hidden p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-card transition-colors">
               <AnimatePresence mode="wait" initial={false}>
@@ -103,17 +96,7 @@ export default function Navbar() {
                   {link.label}
                 </motion.button>
               ))}
-              <motion.button
-                onClick={() => {
-                  setMenuOpen(false);
-                  window.location.hash = '#/darzfusion';
-                }}
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: NAV_LINKS.length * 0.07 }}
-                className="font-playfair text-3xl font-bold text-[#FF1E2D] hover:text-red-500 flex items-center gap-1.5"
-              >
-                <span className="material-symbols-outlined text-2xl font-bold">bolt</span>
-                DarzFusion AI
-              </motion.button>
+
             </nav>
           </motion.div>
         )}
