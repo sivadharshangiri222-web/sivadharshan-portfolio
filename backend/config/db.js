@@ -16,7 +16,8 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME || 'portfolio_db',
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  ssl: process.env.DB_SSL === 'false' ? false : { rejectUnauthorized: false }
 });
 
 export default pool;
